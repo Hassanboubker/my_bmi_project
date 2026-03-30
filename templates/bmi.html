@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <title>BMI Berekenen</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 700px;
+            margin: 50px auto;
+            background-color: #f5f5f5;
+        }
+        h1 { color: #2c3e50; }
+        input {
+            width: 100%;
+            padding: 8px;
+            margin: 8px 0;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #27ae60;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .resultaat {
+            background-color: #d5e8d4;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 5px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 30px;
+            background-color: white;
+        }
+        th {
+            background-color: #2c3e50;
+            color: white;
+            padding: 10px;
+            text-align: left;
+        }
+        td {
+            padding: 8px 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        tr:hover { background-color: #f1f1f1; }
+    </style>
+</head>
+<body>
+
+    <h1>⚖️ BMI Calculator</h1>
+
+    <form method="POST">
+        {% csrf_token %}
+        <label>Gewicht (kg):</label>
+        <input type="number" name="gewicht" step="0.1" placeholder="bv. 70" required>
+        <label>Lengte (meter):</label>
+        <input type="number" name="lengte" step="0.01" placeholder="bv. 1.75" required>
+        <button type="submit">Bereken BMI</button>
+    </form>
+
+    {% if bmi_waarde %}
+    <div class="resultaat">
+        <h2>Resultaat:</h2>
+        <p><strong>Jouw BMI:</strong> {{ bmi_waarde }}</p>
+        <p><strong>Categorie:</strong> {{ categorie }}</p>
+    </div>
+    {% endif %}
+
+    <!-- Geschiedenis tabel -->
+    {% if geschiedenis %}
+    <h2>📊 Geschiedenis</h2>
+    <table>
+        <tr>
+            <th>Gewicht (kg)</th>
+            <th>Lengte (m)</th>
+            <th>BMI</th>
+            <th>Categorie</th>
+            <th>Datum</th>
+        </tr>
+        {% for entry in geschiedenis %}
+        <tr>
+            <td>{{ entry.gewicht }}</td>
+            <td>{{ entry.lengte }}</td>
+            <td>{{ entry.bmi_waarde }}</td>
+            <td>{{ entry.categorie }}</td>
+            <td>{{ entry.datum|date:"d/m/Y H:i" }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% endif %}
+
+</body>
+</html>
